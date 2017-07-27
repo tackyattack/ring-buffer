@@ -9,12 +9,12 @@ using namespace std;
 #define BUFFER_ERROR_EMPTY 2
 #define BUFFER_OK          0
 
-#define RING_BUFFER_SIZE 10
+#define RING_BUFFER_SIZE 20000
 #define BYTE_PER_SAMPLE 2 // 2 bytes per uint16_t
 uint16_t ring_buffer[RING_BUFFER_SIZE] = {0};
-uint16_t ring_buffer_head = 0;
-uint16_t ring_buffer_tail = 0;
-uint16_t ring_buffer_count = 0;
+volatile uint16_t ring_buffer_head = 0;
+volatile uint16_t ring_buffer_tail = 0;
+volatile uint16_t ring_buffer_count = 0;
 
 uint16_t ring_buffer_get_free()
 {
@@ -38,20 +38,16 @@ uint16_t ring_buffer_push(uint16_t *data, uint16_t size)
     return BUFFER_ERROR_FULL;
   }
 
-  //ring_buffer_head = (ring_buffer_head + 1)%RING_BUFFER_SIZE; // move it forward by one
-
   if(size > ring_buffer_dist_to_wrap(ring_buffer_head))
-  {
-    cout << "wrapping" << endl;
+  { // wrap copy
     uint16_t w1 = ring_buffer_dist_to_wrap(ring_buffer_head);
     uint16_t w2 = size - w1;
     cout << "w1:" << w1 << " w2:"<< w2 << endl;
-    memcpy(&ring_buffer[ring_buffer_head], data, w1*BYTE_PER_SAMPLE);
+    memcpy(&ring_buffer[ring_buffer_head], data, w1*BYTE_PER_SAMPLE); // memcpy needs to know how many BYTES
     memcpy(&ring_buffer[0], data+1, w2*BYTE_PER_SAMPLE);
   }
   else
-  {
-    cout << "straight copy" << endl;
+  { // straight copy
     memcpy(&ring_buffer[ring_buffer_head], data, size*BYTE_PER_SAMPLE);
   }
 
@@ -85,6 +81,8 @@ void ring_buffer_clear()
   ring_buffer_tail = 0;
   ring_buffer_count = 0;
 }
+
+//-----end of C only------
 
 void ring_buffer_print()
 {
@@ -130,26 +128,39 @@ void timeout_ms(uint16_t ms)
 
 void task_1()
 {
+  uint16_t data[] = {1,2,4,5,6,7,8,9,10};
   while(1)
   {
-    cout << "starting threads..." << endl;
-    timeout_ms(1000);
+    while(ring_buffer_push(data, 10) != BUFFER_OK)
+    timeout_ms(10);
   }
 }
 
 void task_2()
 {
+  uint16_t sample = 0;
   while(1)
   {
+    ring_buffer_pop(&sample);
+    timeout_ms(100);
+  }
+}
 
+void task_3()
+{
+  while(1)
+  {
+    cout << "ring buffer objects: " << ring_buffer_get_count() << endl;
+    timeout_ms(1000);
   }
 }
 
 int main()
 {
-  // cout << "starting threads..." << endl;
-  // thread first (task_1);
-  // thread second (task_2);
+   cout << "starting threads..." << endl;
+  thread first (task_1);
+  thread second (task_2);
+  thread third (task_3);
 
   //  uint16_t data[] = {1,2,3,4};
   // cout << "push with return: " << ring_buffer_push(data, 4) << endl;
