@@ -5,9 +5,10 @@
 
 using namespace std;
 
+#define BUFFER_OK          0
 #define BUFFER_ERROR_FULL  1
 #define BUFFER_ERROR_EMPTY 2
-#define BUFFER_OK          0
+
 
 #define RING_BUFFER_SIZE 20000
 #define BYTE_PER_SAMPLE 2 // 2 bytes per uint16_t
@@ -42,7 +43,6 @@ uint16_t ring_buffer_push(uint16_t *data, uint16_t size)
   { // wrap copy
     uint16_t w1 = ring_buffer_dist_to_wrap(ring_buffer_head);
     uint16_t w2 = size - w1;
-    cout << "w1:" << w1 << " w2:"<< w2 << endl;
     memcpy(&ring_buffer[ring_buffer_head], data, w1*BYTE_PER_SAMPLE); // memcpy needs to know how many BYTES
     memcpy(&ring_buffer[0], data+1, w2*BYTE_PER_SAMPLE);
   }
@@ -128,10 +128,10 @@ void timeout_ms(uint16_t ms)
 
 void task_1()
 {
-  uint16_t data[] = {1,2,4,5,6,7,8,9,10};
+  uint16_t data[512] = {0};
   while(1)
   {
-    while(ring_buffer_push(data, 10) != BUFFER_OK)
+    while(ring_buffer_push(data, 512) != BUFFER_OK)
     timeout_ms(10);
   }
 }
