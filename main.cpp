@@ -151,7 +151,7 @@ int main()
   // thread first (task_1);
   // thread second (task_2);
 
-   uint16_t data[] = {1,2,3,4};
+  //  uint16_t data[] = {1,2,3,4};
   // cout << "push with return: " << ring_buffer_push(data, 4) << endl;
   // cout << "push with return: " << ring_buffer_push(data, 4) << endl;
   // cout << "push with return: " << ring_buffer_push(data, 2) << endl;
@@ -163,8 +163,22 @@ int main()
   // cout << "push with return: " << ring_buffer_push(data, 1) << endl;
   //
   // ring_buffer_print();
-
-  cout << "push with return: " << ring_buffer_push(data, 2) << endl;
+  //
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // cout << "pop with return: " << ring_buffer_pop(&sample) << " and sample: " << sample << endl;
+  // ring_buffer_print();
 
 
   while(1)
